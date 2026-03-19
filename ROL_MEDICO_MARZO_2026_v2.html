@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ROL MÉDICO · IPRESS REQUE · Marzo 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --ink:        #0d1f3c;
+  --ink-2:      #334a6b;
+  --ink-3:      #8096b4;
+  --surface:    #ffffff;
+  --surface-2:  #f4f7fc;
+  --surface-3:  #eaf0f9;
+  --border:     #dce5f2;
+  --accent:     #0055d4;
+  --accent-2:   #003fa0;
+  --teal:       #00b4a6;
+
+  /* Shift palette */
+  --M:    #059669;   /* Mañana     → emerald */
+  --T:    #0891b2;   /* Tarde      → cyan    */
+  --GN:   #dc2626;   /* G.Noche    → red     */
+  --GD:   #d97706;   /* G.Día      → amber   */
+  --APS:  #7c3aed;   /* APS        → violet  */
+  --MA:   #64748b;   /* Admin      → slate   */
+  --DNT:  #c2410c;   /* DNT        → orange  */
+  --TBC:  #0e7490;   /* TBC        → dark-cy */
+  --D:    #94a3b8;   /* Descanso   → muted   */
+  --MNT:  #16a34a;   /* M/T split indicator */
+
+  --radius-sm: 6px;
+  --radius:    12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-sm: 0 2px 8px rgba(13,31,60,.08);
+  --shadow:    0 8px 32px rgba(13,31,60,.12);
+  --shadow-lg: 0 24px 64px rgba(13,31,60,.22);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--surface-2);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════ SCROLLBAR ═══════ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #b8c8e0; border-radius: 10px; }
+
+/* ═══════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════ */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ══════ HEADER ══════ */
+.header {
+  background: var(--ink);
+  color: white;
+  position: sticky; top: 0; z-index: 300;
+  box-shadow: 0 4px 20px rgba(0,0,0,.35);
+}
+
+.header-inner {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 20px;
+  height: 62px;
+  flex-wrap: wrap;
+}
+
+.header-logo {
+  display: flex; align-items: center; gap: 10px; flex: 1;
+  min-width: 0;
+}
+
+.logo-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--teal) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.15);
+}
+
+.logo-text { min-width: 0; }
+.logo-eyebrow {
+  font-size: 9px; font-weight: 600; letter-spacing: .2em;
+  text-transform: uppercase; color: #7bafd4; line-height: 1;
+}
+.logo-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 3vw, 22px);
+  font-weight: 700; color: white; line-height: 1.15;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.header-nav {
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* View toggle */
+.view-toggle {
+  display: flex; gap: 3px;
+  background: rgba(255,255,255,.1); border-radius: 9px; padding: 3px;
+}
+.vt-btn {
+  padding: 5px 10px; border-radius: 6px; border: none;
+  background: transparent; color: rgba(255,255,255,.65);
+  font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600;
+  cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 5px;
+}
+.vt-btn.active { background: white; color: var(--ink); }
+.vt-btn:hover:not(.active) { color: white; }
+
+/* Action buttons */
+.hbtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 8px; border: none;
+  font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all .18s; white-space: nowrap; letter-spacing: .01em;
+}
+.hbtn-outline {
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.9);
+  border: 1px solid rgba(255,255,255,.2);
+}
+.hbtn-outline:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
+.hbtn-primary { background: var(--accent); color: white; box-shadow: 0 2px 8px rgba(0,85,212,.4); }
+.hbtn-primary:hover { background: #0066ff; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,85,212,.5); }
+.hbtn-gold { background: linear-gradient(135deg,#f59e0b,#fbbf24); color: #1a1400; }
+.hbtn-gold:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(245,158,11,.4); }
+
+/* ══════ SUB-BAR ══════ */
+.subbar {
+  background: var(--ink-2);
+  padding: 7px 20px;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px;
+  font-size: 11px; color: rgba(255,255,255,.75);
+}
+.subbar-pulse {
+  width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0;
+  animation: pulse-live 2.2s ease-in-out infinite;
+}
+@keyframes pulse-live { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+.subbar-sep { opacity: .25; }
+
+/* ══════ LEGEND ══════ */
+.legend-wrap {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 20px;
+  display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center;
+}
+.leg-group-label {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .15em; color: var(--ink-3);
+}
+.leg-sep { width: 1px; height: 16px; background: var(--border); }
+.leg-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; color: white;
+  cursor: default; transition: transform .15s;
+}
+.leg-pill:hover { transform: scale(1.05); }
+.leg-pill.lp-MA { color: var(--ink-2); }
+.leg-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.6); }
+
+/* ═══════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════ */
+.main-content { flex: 1; padding: 16px 20px 24px; }
+
+/* ══════ VIEW PANELS ══════ */
+.view-panel { display: none; }
+.view-panel.active { display: block; animation: fadeUp .28s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* ═══════════════════════════════════════════
+   CALENDAR VIEW
+═══════════════════════════════════════════ */
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+}
+.cal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 4vw, 34px); font-weight: 700; color: var(--ink);
+}
+.cal-subtitle { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+
+.cal-stats {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.cal-stat {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 8px 14px; text-align: center;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+}
+.cal-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 700; color: var(--accent); line-height: 1;
+}
+.cal-stat-lbl { font-size: 9.5px; color: var(--ink-3); font-weight: 600; margin-top: 2px; }
+
+/* Day-of-week row */
+.cal-dow {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 4px; margin-bottom: 4px;
+}
+.cal-dow-cell {
+  text-align: center; padding: 7px 0;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--ink-3);
+}
+.cal-dow-cell.dow-sun { color: #dc2626; }
+.cal-dow-cell.dow-sat { color: var(--accent); }
+
+/* Calendar grid */
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-cell {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  padding: 7px 6px 6px;
+  min-height: 88px;
+  cursor: pointer;
+  transition: box-shadow .18s, border-color .18s, transform .15s;
+  position: relative; overflow: hidden;
+}
+.cal-cell:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 18px rgba(0,85,212,.15);
+  transform: translateY(-2px);
+  z-index: 2;
+}
+.cal-cell.empty { background: transparent; border-color: transparent; cursor: default; }
+.cal-cell.empty:hover { transform: none; box-shadow: none; }
+.cal-cell.is-today {
+  border-color: var(--accent);
+  background: linear-gradient(160deg, #e8f0ff 0%, #f0f7ff 100%);
+  box-shadow: 0 0 0 3px rgba(0,85,212,.18), var(--shadow-sm);
+}
+.cal-cell.is-today::before {
+  content: 'HOY';
+  position: absolute; top: 0; right: 0;
+  background: var(--accent); color: white;
+  font-size: 7.5px; font-weight: 800; letter-spacing: .1em;
+  padding: 2px 5px; border-radius: 0 var(--radius-sm) 0 var(--radius-sm);
+}
+.cal-cell.is-sunday { background: #fffafa; }
+.cal-cell.is-saturday { background: #fafbff; }
+.cal-cell.has-note::after {
+  content: '';
+  position: absolute; bottom: 5px; right: 5px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #fbbf24; box-shadow: 0 0 5px rgba(251,191,36,.5);
+}
+
+.cell-day {
+  font-size: 14px; font-weight: 800; color: var(--ink); line-height: 1;
+  margin-bottom: 5px;
+}
+.cal-cell.is-today .cell-day { color: var(--accent); }
+.cal-cell.is-sunday .cell-day { color: #dc2626; }
+.cal-cell.is-saturday .cell-day { color: var(--accent); }
+
+/* Shift pills in calendar */
+.cell-shifts { display: flex; flex-direction: column; gap: 2px; }
+.cell-shift-row {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 9.5px; font-weight: 600; color: white;
+  background: var(--M); padding: 2px 5px; border-radius: 4px;
+  overflow: hidden; line-height: 1.2;
+}
+.cell-shift-row.csr-T   { background: var(--T); }
+.cell-shift-row.csr-GN  { background: var(--GN); }
+.cell-shift-row.csr-GD  { background: var(--GD); }
+.cell-shift-row.csr-APS { background: var(--APS); }
+.cell-shift-row.csr-MA  { background: #dde5ef; color: var(--ink-2); }
+.cell-shift-row.csr-DNT { background: var(--DNT); }
+.cell-shift-row.csr-TBC { background: var(--TBC); }
+.cell-shift-row.csr-D   { background: var(--D); }
+.cell-shift-row.csr-MIXED { background: linear-gradient(90deg, var(--M) 50%, var(--T) 50%); }
+
+.cell-more {
+  font-size: 9px; font-weight: 700; color: var(--ink-3);
+  margin-top: 2px; text-align: right;
+}
+
+/* ═══════════════════════════════════════════
+   TABLE VIEW
+═══════════════════════════════════════════ */
+.table-wrap {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  overflow: auto;
+  max-height: calc(100vh - 220px);
+}
+
+.sched-table {
+  border-collapse: separate; border-spacing: 0;
+  width: 100%; min-width: 1000px;
+}
+
+/* Sticky header */
+.sched-table thead th {
+  background: var(--ink); color: white;
+  padding: 9px 4px; text-align: center;
+  font-size: 11px; font-weight: 700;
+  position: sticky; top: 0; z-index: 10;
+  border-right: 1px solid rgba(255,255,255,.08);
+  border-bottom: 2px solid rgba(255,255,255,.12);
+  white-space: nowrap;
+  user-select: none;
+}
+.sched-table thead th.th-name {
+  text-align: left; padding-left: 16px; min-width: 220px;
+  position: sticky; left: 0; z-index: 11;
+  border-right: 2px solid rgba(255,255,255,.15);
+}
+.sched-table thead th.th-sun { background: #0a1a30; }
+.sched-table thead th.th-sat { background: #0e2448; }
+.sched-table thead th.th-today { background: var(--accent) !important; }
+
+.th-day-inner { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.th-day-num { font-size: 15px; font-weight: 800; line-height: 1; }
+.th-day-name { font-size: 8px; opacity: .6; text-transform: uppercase; letter-spacing: .08em; }
+
+/* Table body */
+.sched-table tbody tr { transition: background .12s; }
+.sched-table tbody tr:hover td { background: #f0f6ff !important; }
+.sched-table tbody tr:hover td.td-name { background: #e8f0ff !important; }
+
+.sched-table tbody td {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  height: 48px;
+}
+.sched-table tbody td.td-name {
+  padding: 0 14px;
+  position: sticky; left: 0; z-index: 5;
+  background: white; border-right: 2px solid var(--border);
+  box-shadow: 4px 0 12px rgba(0,0,0,.06);
+}
+.sched-table tbody tr:nth-child(even) td.td-name { background: #fafcff; }
+
+.td-name-inner { display: flex; align-items: center; gap: 9px; }
+.td-avatar {
+  width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9.5px; font-weight: 800; color: white;
+}
+.td-doc-name { font-size: 11.5px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+
+.sched-table tbody td.td-shift {
+  text-align: center; vertical-align: middle;
+  padding: 4px 3px; cursor: pointer;
+  position: relative; min-width: 46px;
+}
+.sched-table tbody td.td-shift.td-today { background: #eef4ff; }
+.sched-table tbody td.td-shift.td-sun { background: #fff8f8; }
+.sched-table tbody td.td-shift.td-sat { background: #f8f9ff; }
+.sched-table tbody tr:nth-child(even) td.td-shift { background: #fafbfc; }
+.sched-table tbody tr:nth-child(even) td.td-shift.td-today { background: #e8f0fc; }
+
+.sched-table tbody td.td-shift.has-note::after {
+  content: ''; position: absolute; top: 3px; right: 3px;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #fbbf24;
+}
+
+/* ── Shift badges ── */
+.sbadge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 3px 7px; border-radius: 5px;
+  font-size: 10px; font-weight: 800; color: white; letter-spacing: .03em;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2); white-space: nowrap;
+}
+.sbadge.sb-M   { background: var(--M); }
+.sbadge.sb-T   { background: var(--T); }
+.sbadge.sb-GN  { background: var(--GN); }
+.sbadge.sb-GD  { background: var(--GD); }
+.sbadge.sb-APS { background: var(--APS); }
+.sbadge.sb-MA  { background: #dde5ef; color: var(--ink-2); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.sbadge.sb-DNT { background: var(--DNT); }
+.sbadge.sb-TBC { background: var(--TBC); }
+.sbadge.sb-D   { background: var(--D); }
+
+.sbadge-split {
+  display: inline-flex; overflow: hidden;
+  border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.sbadge-half {
+  padding: 3px 5px; font-size: 9px; font-weight: 800;
+  color: white; letter-spacing: .03em;
+}
+.sbadge-half.sbh-MA { color: var(--ink-2); }
+
+/* ═══════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════ */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(8,18,38,.6); backdrop-filter: blur(8px);
+  z-index: 500; display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s, visibility .3s;
+}
+.overlay.open { opacity: 1; visibility: visible; }
+
+/* Day detail modal */
+.day-modal {
+  background: var(--surface); border-radius: var(--radius-xl);
+  width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(28px) scale(.96);
+  transition: transform .3s cubic-bezier(.34,1.35,.64,1);
+}
+.overlay.open .day-modal { transform: translateY(0) scale(1); }
+
+.dm-head {
+  padding: 24px 24px 18px;
+  background: linear-gradient(140deg, var(--ink) 0%, #1a3a70 100%);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  color: white;
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+.dm-day-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 58px; font-weight: 700; line-height: 1; color: white;
+}
+.dm-day-label { font-size: 14px; color: rgba(255,255,255,.7); margin-top: 2px; }
+.dm-head-right { text-align: right; }
+.dm-today-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #4ade80; color: #052e16;
+  font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 20px;
+  margin-bottom: 8px; letter-spacing: .05em;
+}
+.dm-close {
+  background: rgba(255,255,255,.15); border: none; color: white;
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: background .2s; flex-shrink: 0;
+}
+.dm-close:hover { background: rgba(255,255,255,.28); }
+
+.dm-body { padding: 20px 22px 24px; }
+
+.dm-section-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .15em; color: var(--ink-3); margin-bottom: 10px;
+}
+.dm-shift-summary {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px;
+}
+.dm-shift-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 10px;
+  font-size: 11px; font-weight: 700; color: white;
+}
+.dm-shift-badge.dsb-MA { color: var(--ink-2); }
+
+.dm-doctor-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.dm-doc-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--radius-sm);
+  background: var(--surface-2); border: 1px solid var(--border);
+  transition: background .15s;
+}
+.dm-doc-item:hover { background: var(--surface-3); }
+.dm-doc-bar { width: 4px; height: 40px; border-radius: 2px; flex-shrink: 0; }
+.dm-doc-name { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.dm-doc-shift-label { font-size: 11px; color: var(--ink-3); margin-right: 6px; }
+.dm-no-staff { font-size: 13px; color: var(--ink-3); font-style: italic; padding: 6px 0; }
+
+.dm-divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+.dm-note-area {
+  width: 100%; min-height: 88px; padding: 12px 14px;
+  border: 2px solid var(--border); border-radius: 10px;
+  font-family: 'Sora', sans-serif; font-size: 13px;
+  resize: vertical; outline: none; color: var(--ink);
+  transition: border-color .2s; background: var(--surface);
+}
+.dm-note-area:focus { border-color: var(--accent); }
+.dm-note-actions { display: flex; gap: 8px; margin-top: 10px; }
+.dm-save-btn {
+  flex: 1; padding: 11px;
+  background: var(--ink); color: white; border: none;
+  border-radius: 9px; cursor: pointer;
+  font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700;
+  transition: background .2s;
+}
+.dm-save-btn:hover { background: var(--ink-2); }
+.dm-clear-btn {
+  padding: 11px 16px;
+  background: var(--surface-3); color: var(--ink-3); border: 1px solid var(--border);
+  border-radius: 9px; cursor: pointer;
+  font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 600;
+  transition: background .2s;
+}
+.dm-clear-btn:hover { background: #fce8e8; color: #dc2626; border-color: #fca5a5; }
+
+/* ═══════════════════════════════════════════
+   BANNER MODAL
+═══════════════════════════════════════════ */
+.banner-overlay {
+  position: fixed; inset: 0;
+  background: rgba(5,12,30,.85); backdrop-filter: blur(12px);
+  z-index: 600; display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  opacity: 0; visibility: hidden;
+  transition: opacity .4s, visibility .4s;
+}
+.banner-overlay.open { opacity: 1; visibility: visible; }
+
+.banner-card {
+  background: var(--surface); border-radius: var(--radius-xl);
+  max-width: 600px; width: 100%; overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transform: scale(.86) translateY(30px);
+  transition: transform .45s cubic-bezier(.34,1.4,.64,1);
+}
+.banner-overlay.open .banner-card { transform: scale(1) translateY(0); }
+
+.banner-hero {
+  position: relative; overflow: hidden;
+  background: var(--ink);
+  padding: 50px 40px 42px;
+  text-align: center; color: white;
+}
+.banner-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 80% -10%, rgba(0,85,212,.6) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 10% 110%, rgba(0,180,166,.3) 0%, transparent 55%);
+}
+.banner-grid-bg {
+  position: absolute; inset: 0; opacity: .04;
+  background-image:
+    linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.banner-icon-wrap { position: relative; font-size: 48px; margin-bottom: 12px; line-height: 1; }
+.banner-month-name {
+  position: relative;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(60px, 14vw, 88px);
+  font-weight: 700; line-height: .95;
+  background: linear-gradient(135deg, #fff 30%, rgba(120,180,255,.7) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.banner-year-badge {
+  position: relative;
+  display: inline-block; margin-top: 8px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.8); font-size: 12px; font-weight: 700;
+  padding: 4px 16px; border-radius: 20px; letter-spacing: .15em;
+}
+.banner-tagline {
+  position: relative;
+  margin-top: 16px; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .2em;
+  color: rgba(255,255,255,.5);
+}
+
+.banner-body { padding: 30px 36px 0; }
+
+.banner-kpi-row {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+  margin-bottom: 22px;
+}
+.banner-kpi {
+  text-align: center; padding: 14px 8px;
+  background: var(--surface-2); border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.banner-kpi-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px; font-weight: 700; color: var(--accent); line-height: 1;
+}
+.banner-kpi-lbl { font-size: 10px; color: var(--ink-3); margin-top: 3px; font-weight: 600; }
+
+.banner-text {
+  font-size: 13.5px; color: var(--ink-2); line-height: 1.7;
+  text-align: center; margin-bottom: 28px;
+}
+.banner-text strong { color: var(--ink); }
+
+.banner-cta-btn {
+  display: block; width: 100%; padding: 17px;
+  background: var(--ink); color: white;
+  border: none; cursor: pointer;
+  font-family: 'Sora', sans-serif; font-size: 13.5px; font-weight: 800;
+  letter-spacing: .05em; text-transform: uppercase;
+  transition: background .2s;
+}
+.banner-cta-btn:hover { background: #1a3a70; }
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 28px; right: 28px;
+  background: var(--ink); color: white;
+  padding: 12px 18px; border-radius: 12px;
+  font-size: 13px; font-weight: 600; z-index: 800;
+  display: flex; align-items: center; gap: 8px;
+  transform: translateY(70px); opacity: 0;
+  transition: all .32s cubic-bezier(.34,1.2,.64,1);
+  box-shadow: var(--shadow);
+  max-width: calc(100vw - 56px);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-icon { font-size: 15px; }
+
+/* ═══════════════════════════════════════════
+   EMPTY CALENDAR PADDING CELLS
+═══════════════════════════════════════════ */
+.cal-cell.empty { min-height: 0; height: 0; }
+
+/* ═══════════════════════════════════════════
+   PRINT STYLES
+═══════════════════════════════════════════ */
+@media print {
+  body { background: white; }
+  .header { position: relative !important; }
+  .header-nav, .subbar { display: none !important; }
+  .hbtn-gold, .hbtn-outline, .hbtn-primary { display: none !important; }
+  .legend-wrap { display: flex !important; }
+  .main-content { padding: 0; }
+  #view-table { display: block !important; }
+  #view-calendar { display: none !important; }
+  .table-wrap { max-height: none !important; overflow: visible !important;
+    box-shadow: none !important; border-radius: 0 !important; }
+  .sched-table { min-width: 0 !important; font-size: 7.5px !important; }
+  .sched-table thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .sbadge, .sbadge-half { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .td-avatar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .overlay, .banner-overlay, .toast { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 700px) {
+  .header-inner { height: auto; padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+  .main-content { padding: 10px 12px 20px; }
+  .hbtn span { display: none; }
+  .hbtn { padding: 7px 9px; }
+  .banner-body { padding: 20px 18px 0; }
+  .banner-kpi-row { gap: 8px; }
+  .banner-kpi-val { font-size: 26px; }
+  .cal-cell { min-height: 72px; padding: 5px 4px 4px; }
+  .cell-day { font-size: 12px; }
+  .cell-shift-row { font-size: 8.5px; padding: 1.5px 4px; }
+  .dm-day-num { font-size: 42px; }
+}
+
+@media (max-width: 420px) {
+  .cal-cell { min-height: 58px; }
+  .cell-shifts { display: none; }
+  .cal-cell.is-today .cell-shifts,
+  .cal-cell.has-note .cell-shifts { display: flex; }
+  .cell-day { font-size: 13px; margin-bottom: 0; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══════════════════ BANNER ═══════════════════ -->
+<div class="banner-overlay" id="bannerOverlay">
+  <div class="banner-card" role="dialog" aria-modal="true" aria-label="Bienvenida Marzo 2026">
+    <div class="banner-hero">
+      <div class="banner-grid-bg"></div>
+      <div class="banner-icon-wrap">🏥</div>
+      <div class="banner-month-name">Marzo</div>
+      <div class="banner-year-badge">2026</div>
+      <div class="banner-tagline">IPRESS REQUE · Rol Médico Oficial</div>
+    </div>
+    <div class="banner-body">
+      <div class="banner-kpi-row">
+        <div class="banner-kpi"><div class="banner-kpi-val">11</div><div class="banner-kpi-lbl">Médicos Activos</div></div>
+        <div class="banner-kpi"><div class="banner-kpi-val">31</div><div class="banner-kpi-lbl">Días de Mes</div></div>
+        <div class="banner-kpi"><div class="banner-kpi-val">24/7</div><div class="banner-kpi-lbl">Cobertura</div></div>
+      </div>
+      <p class="banner-text">
+        ¡Bienvenidos al mes de <strong>Marzo 2026</strong>! Este rol garantiza la <strong>cobertura continua y la excelencia</strong> en la atención a nuestros pacientes.<br><br>
+        Para cambios de turno, coordinar con Jefatura con mínimo <strong>48 horas de anticipación</strong>. Recuerden registrar asistencia al inicio de cada guardia. 🩺
+      </p>
+    </div>
+    <button class="banner-cta-btn" id="bannerCta" onclick="closeBanner()">✓ &nbsp; Entendido — Comenzar el mes</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ DAY MODAL ═══════════════════ -->
+<div class="overlay" id="dayOverlay">
+  <div class="day-modal" role="dialog" aria-modal="true">
+    <div class="dm-head">
+      <div style="display:flex;gap:18px;align-items:flex-end">
+        <div class="dm-day-num" id="dmDayNum">—</div>
+        <div>
+          <div id="dmTodayBadge" class="dm-today-badge" style="display:none">
+            <span>●</span> HOY
+          </div>
+          <div class="dm-day-label" id="dmDayLabel">Cargando...</div>
+        </div>
+      </div>
+      <button class="dm-close" onclick="closeDayModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="dm-body">
+      <div class="dm-section-label">Resumen de Turnos</div>
+      <div class="dm-shift-summary" id="dmShiftSummary"></div>
+      <div class="dm-section-label">👨‍⚕️ Médicos en Servicio</div>
+      <div class="dm-doctor-list" id="dmDoctorList"></div>
+      <div class="dm-divider"></div>
+      <div class="dm-section-label">📝 Notas / Tareas del Día</div>
+      <textarea class="dm-note-area" id="dmNoteArea"
+        placeholder="Escribe aquí notas, recordatorios o tareas importantes para este día..."></textarea>
+      <div class="dm-note-actions">
+        <button class="dm-save-btn" onclick="saveNote()">💾 Guardar Nota</button>
+        <button class="dm-clear-btn" onclick="clearNote()">🗑 Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TOAST ═══════════════════ -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✔</span>
+  <span id="toastMsg">Nota guardada</span>
+</div>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="logo-icon">🏥</div>
+      <div class="logo-text">
+        <div class="logo-eyebrow">Centro de Salud · IPRESS REQUE</div>
+        <div class="logo-title">ROL MÉDICO — MARZO 2026</div>
+      </div>
+    </div>
+    <div class="header-nav">
+      <div class="view-toggle" role="group" aria-label="Cambiar vista">
+        <button class="vt-btn active" id="btnViewCal" onclick="switchView('calendar')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span>Calendario</span>
+        </button>
+        <button class="vt-btn" id="btnViewTbl" onclick="switchView('table')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+          <span>Tabla</span>
+        </button>
+      </div>
+      <button class="hbtn hbtn-gold" onclick="openBanner()" title="Ver aviso del mes">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span>Aviso</span>
+      </button>
+      <button class="hbtn hbtn-outline" onclick="printPage()" title="Imprimir horario">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>Imprimir</span>
+      </button>
+      <button class="hbtn hbtn-primary" onclick="exportPDF()" title="Exportar a PDF">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>PDF</span>
+      </button>
+    </div>
+  </div>
+  <div class="subbar">
+    <div class="subbar-pulse"></div>
+    <span id="subbarDate">Cargando fecha...</span>
+    <span class="subbar-sep">|</span>
+    <span id="subbarDoctors">Cargando...</span>
+    <span class="subbar-sep">|</span>
+    <span>Toca cualquier día para ver detalles o agregar notas</span>
+  </div>
+</header>
+
+<!-- ═══════════════════ LEGEND ═══════════════════ -->
+<div class="legend-wrap">
+  <span class="leg-group-label">Turnos</span>
+  <span class="leg-pill" style="background:var(--M)"><span class="leg-dot"></span>M · Mañana</span>
+  <span class="leg-pill" style="background:var(--T)"><span class="leg-dot"></span>T · Tarde</span>
+  <span class="leg-pill" style="background:var(--GN)"><span class="leg-dot"></span>GN · Guardia Noche</span>
+  <span class="leg-pill" style="background:var(--GD)"><span class="leg-dot"></span>GD · Guardia Día</span>
+  <span class="leg-sep"></span>
+  <span class="leg-group-label">Servicios</span>
+  <span class="leg-pill" style="background:var(--APS)"><span class="leg-dot"></span>APS · At. Primaria</span>
+  <span class="leg-pill lp-MA" style="background:#dde5ef;color:var(--ink-2)"><span class="leg-dot" style="background:var(--ink-3)"></span>MA · Administrativo</span>
+  <span class="leg-pill" style="background:var(--DNT)"><span class="leg-dot"></span>DNT · Daños No Transm.</span>
+  <span class="leg-pill" style="background:var(--TBC)"><span class="leg-dot"></span>TBC · Tuberculosis</span>
+  <span class="leg-sep"></span>
+  <span style="font-size:10px;color:var(--ink-3)">🟡 = Nota guardada</span>
+</div>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="main-content" id="mainContent">
+
+  <!-- ── CALENDAR VIEW ── -->
+  <div class="view-panel active" id="view-calendar">
+    <div class="cal-header">
+      <div>
+        <div class="cal-title">Marzo <em style="font-style:normal;color:var(--accent)">2026</em></div>
+        <div class="cal-subtitle">IPRESS REQUE · 11 médicos · 31 días</div>
+      </div>
+      <div class="cal-stats">
+        <div class="cal-stat"><div class="cal-stat-num" id="csTodayDocs">—</div><div class="cal-stat-lbl">Hoy de turno</div></div>
+        <div class="cal-stat"><div class="cal-stat-num">11</div><div class="cal-stat-lbl">Total médicos</div></div>
+        <div class="cal-stat"><div class="cal-stat-num">4</div><div class="cal-stat-lbl">Guardias tipo</div></div>
+      </div>
+    </div>
+    <div class="cal-dow">
+      <div class="cal-dow-cell dow-sun">Dom</div>
+      <div class="cal-dow-cell">Lun</div>
+      <div class="cal-dow-cell">Mar</div>
+      <div class="cal-dow-cell">Mié</div>
+      <div class="cal-dow-cell">Jue</div>
+      <div class="cal-dow-cell">Vie</div>
+      <div class="cal-dow-cell dow-sat">Sáb</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- ── TABLE VIEW ── -->
+  <div class="view-panel" id="view-table">
+    <div class="table-wrap" id="tableWrap">
+      <table class="sched-table" id="schedTable">
+        <thead id="schedThead"></thead>
+        <tbody id="schedTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+</div><!-- /.app -->
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   ▌ DATA  ▌ ROL MÉDICO MARZO 2026 — IPRESS REQUE
+═══════════════════════════════════════════════════════ */
+
+// March 1 2026 = Sunday → dayOfWeek offset = 0
+const DOW_OFFSET = 0; // 0=Sunday
+
+const DAY_NAMES_SHORT = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const DAY_NAMES_FULL  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+// dow(d): 0=Sun,1=Mon,...,6=Sat for a day number 1–31 in March 2026
+function dow(d) { return (DOW_OFFSET + d - 1) % 7; }
+function isSun(d) { return dow(d) === 0; }
+function isSat(d) { return dow(d) === 6; }
+
+/* Shift meta */
+const SHIFT_META = {
+  M:   { label:'M',   name:'Mañana',           css:'M',   hex:'#059669' },
+  T:   { label:'T',   name:'Tarde',             css:'T',   hex:'#0891b2' },
+  GN:  { label:'GN',  name:'Guardia Noche',     css:'GN',  hex:'#dc2626' },
+  GD:  { label:'GD',  name:'Guardia Día',       css:'GD',  hex:'#d97706' },
+  APS: { label:'APS', name:'At. Primaria Salud',css:'APS', hex:'#7c3aed' },
+  MA:  { label:'MA',  name:'Administrativo',    css:'MA',  hex:'#dde5ef' },
+  DNT: { label:'DNT', name:'Daños No Transm.',  css:'DNT', hex:'#c2410c' },
+  TBC: { label:'TBC', name:'Tuberculosis',      css:'TBC', hex:'#0e7490' },
+  D:   { label:'D',   name:'Descanso',          css:'D',   hex:'#94a3b8' },
+};
+
+/* Avatar background colors for doctors */
+const AVATAR_COLORS = [
+  '#1e40af','#0f766e','#9d174d','#7c2d12','#4c1d95',
+  '#064e3b','#713f12','#1d4ed8','#be185d','#0c4a6e','#166534'
+];
+
+/* ── THE SCHEDULE ──────────────────────────────── */
+const DOCTORS = [
+  {
+    id:1, name:'DR. LUIS CALDERÓN PERALES',
+    schedule:{
+      3:'APS', 4:'MA', 6:'M', 7:'GN',
+      10:'M/GN', 13:'GN',
+      16:'APS', 17:'M', 18:'MA', 19:'GN',
+      22:'GD', 24:'MA', 25:'GN', 29:'MA/GN', 31:'GN'
+    }
+  },
+  {
+    id:2, name:'DRA. ROSA ROJAS OLIVOS',
+    schedule:{
+      1:'GD', 3:'MA', 5:'APS', 7:'MA', 8:'GN',
+      11:'APS', 12:'GN', 15:'GD', 17:'MA', 18:'GN',
+      21:'M', 22:'GN', 26:'T', 27:'M/GN', 29:'GD', 31:'MA'
+    }
+  },
+  {
+    id:3, name:'DR. FERNANDO CALDERÓN FLORES',
+    schedule:{
+      2:'M/GN', 5:'M/GN', 8:'GD',
+      10:'T', 11:'M', 12:'M', 13:'TBC', 14:'GN',
+      18:'GN', 22:'GN', 23:'D', 24:'GN', 27:'GN',
+      30:'M', 31:'T'
+    }
+  },
+  {
+    id:4, name:'DR. JOSÉ BERNILLA GONZALES',
+    schedule:{
+      3:'M/T', 4:'M/T', 6:'APS',
+      9:'M/T', 11:'APS', 12:'M/T', 13:'M/T',
+      17:'M/T', 18:'M/T',
+      23:'M/T', 24:'M/T',
+      30:'M/T', 31:'M/T'
+    }
+  },
+  {
+    id:5, name:'DRA. EDITH CASTAÑEDA DÁVILA',
+    schedule:{
+      2:'APS', 3:'GN', 5:'M/GN',
+      9:'M', 10:'APS', 11:'GN', 14:'M',
+      16:'M/GN', 19:'T', 20:'M', 21:'M',
+      23:'T', 24:'M', 25:'M', 26:'T', 27:'M', 31:'GN'
+    }
+  },
+  {
+    id:6, name:'DRA. SILVIA PERALES SÁNCHEZ',
+    schedule:{
+      2:'T', 3:'M', 4:'T', 5:'M', 6:'T', 7:'M',
+      9:'M', 10:'T', 11:'T', 12:'T', 13:'M', 14:'T',
+      16:'T', 17:'M', 18:'T', 19:'M', 20:'M', 21:'T',
+      23:'M', 24:'T', 25:'M', 26:'M', 27:'T',
+      30:'M', 31:'M'
+    }
+  },
+  {
+    id:7, name:'DR. HÉCTOR NAVAL FERNÁNDEZ',
+    schedule:{
+      2:'T', 3:'M', 4:'M', 5:'T', 6:'T', 7:'T',
+      9:'T', 10:'M', 11:'T', 12:'M', 13:'T', 14:'M',
+      16:'M', 17:'T', 18:'M', 19:'M', 20:'M', 21:'T',
+      23:'M', 24:'T', 25:'M', 26:'M', 27:'T',
+      30:'T'
+    }
+  },
+  {
+    id:8, name:'DR. GERSON DAMIÁN SIESQUEN',
+    schedule:{
+      2:'M', 3:'T', 4:'M/GN', 6:'M',
+      9:'GN', 12:'M', 13:'T', 14:'M',
+      16:'M', 17:'T', 18:'M', 19:'T', 20:'M',
+      23:'M/GN', 26:'T', 27:'M', 28:'M',
+      30:'M', 31:'M'
+    }
+  },
+  {
+    id:9, name:'DRA. ROSSANA BRAVO NUREÑA',
+    schedule:{
+      2:'M', 3:'T', 4:'M', 5:'T', 6:'M', 7:'M',
+      9:'M', 10:'M', 11:'M', 12:'T', 13:'M',
+      16:'T', 17:'M', 18:'M', 19:'M', 20:'T', 21:'M',
+      23:'M', 24:'M', 25:'M', 26:'T', 27:'M',
+      30:'M', 31:'T'
+    }
+  },
+  {
+    id:10, name:'DR. ALAN RAMÍREZ ZELADA',
+    schedule:{
+      3:'T', 4:'T', 5:'T', 6:'T', 7:'M', 8:'M',
+      9:'T', 10:'T', 11:'T', 12:'T', 13:'M',
+      16:'T', 17:'T', 18:'T', 19:'T', 20:'M', 21:'M',
+      23:'T', 24:'T', 25:'T', 26:'T', 27:'M', 28:'M',
+      31:'T'
+    }
+  },
+  {
+    id:11, name:'DRA. TULA SÁNCHEZ LÓPEZ',
+    schedule:{
+      1:'GN', 15:'GN', 22:'GN'
+    }
+  }
+];
+
+/* ═══════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════ */
+const TODAY_D = 19; // today = March 19, 2026
+
+function initials(name) {
+  const stripped = name.replace(/^DR[A]?\.\s*/i,'');
+  const parts    = stripped.trim().split(/\s+/);
+  return (parts[0]?.[0]||'') + (parts[1]?.[0]||'');
+}
+
+function parseParts(code) {
+  return code ? code.split('/') : [];
+}
+
+/* Badge HTML for table */
+function tableBadge(code) {
+  if (!code) return '';
+  const parts = parseParts(code);
+  if (parts.length > 1) {
+    const halves = parts.map(p => {
+      const m = SHIFT_META[p]; if (!m) return '';
+      const tc = p === 'MA' ? 'var(--ink-2)' : 'white';
+      return `<span class="sbadge-half sbh-${p}" style="background:${m.hex};color:${tc}">${m.label}</span>`;
+    }).join('');
+    return `<div class="sbadge-split">${halves}</div>`;
+  }
+  const m = SHIFT_META[parts[0]]; if (!m) return '';
+  return `<span class="sbadge sb-${parts[0]}">${m.label}</span>`;
+}
+
+/* Calendar shift rows (compact) */
+function calShiftRow(code, docName) {
+  if (!code) return '';
+  const parts = parseParts(code);
+  const primary = parts[0];
+  const m = SHIFT_META[primary];
+  if (!m) return '';
+  const shortName = docName.split(' ').slice(-1)[0]; // last word
+  const label = parts.length > 1 ? parts.join('/') : m.label;
+  return `<div class="cell-shift-row csr-${primary}" title="${docName} · ${code}">${label} ${shortName}</div>`;
+}
+
+/* Primary color of a code */
+function shiftHex(code) {
+  if (!code) return '#94a3b8';
+  return SHIFT_META[parseParts(code)[0]]?.hex || '#94a3b8';
+}
+
+/* Short shift label */
+function shiftLabel(code) {
+  if (!code) return '';
+  const parts = parseParts(code);
+  return parts.map(p => SHIFT_META[p]?.label || p).join('/');
+}
+
+function shiftName(code) {
+  if (!code) return '';
+  const parts = parseParts(code);
+  return parts.map(p => SHIFT_META[p]?.name || p).join(' + ');
+}
+
+/* Note storage */
+const STORAGE_PREFIX = 'ipress_reque_note_';
+function getNote(day)      { try { return localStorage.getItem(STORAGE_PREFIX+day)||''; } catch(e){ return ''; } }
+function setNote(day,val)  { try { if(val) localStorage.setItem(STORAGE_PREFIX+day,val); else localStorage.removeItem(STORAGE_PREFIX+day); } catch(e){} }
+function hasNote(day)      { return !!getNote(day); }
+
+/* Doctors on a given day */
+function doctorsOnDay(day) {
+  return DOCTORS.filter(d => d.schedule[day]).map(d => ({...d, shift: d.schedule[day]}));
+}
+
+/* Count of unique primary shifts on a day */
+function dayShiftCounts(day) {
+  const map = {};
+  doctorsOnDay(day).forEach(d => {
+    parseParts(d.shift).forEach(p => { map[p] = (map[p]||0)+1; });
+  });
+  return map;
+}
+
+/* ═══════════════════════════════════════════════
+   CALENDAR BUILD
+═══════════════════════════════════════════════ */
+const MAX_VISIBLE_ROWS = 4; // max shifts to show per cell before "+N more"
+
+function buildCalendar() {
+  const grid = document.getElementById('calGrid');
+  let html = '';
+
+  // Leading empty cells (March 1 = Sunday → 0 empties)
+  for (let i = 0; i < DOW_OFFSET; i++) {
+    html += '<div class="cal-cell empty"></div>';
+  }
+
+  for (let d = 1; d <= 31; d++) {
+    const docs   = doctorsOnDay(d);
+    const isToday = d === TODAY_D;
+    const note   = hasNote(d);
+    const sun    = isSun(d), sat = isSat(d);
+
+    let cls = 'cal-cell';
+    if (isToday) cls += ' is-today';
+    else if (sun) cls += ' is-sunday';
+    else if (sat) cls += ' is-saturday';
+    if (note) cls += ' has-note';
+
+    const visible = docs.slice(0, MAX_VISIBLE_ROWS);
+    const extra   = docs.length - visible.length;
+
+    const rowsHTML = visible.map(doc => calShiftRow(doc.shift, doc.name)).join('');
+
+    html += `<div class="${cls}" onclick="openDayModal(${d})" title="${DAY_NAMES_FULL[dow(d)]} ${d} de Marzo · ${docs.length} médico(s)">
+      <div class="cell-day">${d}</div>
+      <div class="cell-shifts">
+        ${rowsHTML}
+        ${extra > 0 ? `<div class="cell-more">+${extra} más</div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+
+  // Update stat: today's doctors
+  document.getElementById('csTodayDocs').textContent = doctorsOnDay(TODAY_D).length;
+}
+
+/* ═══════════════════════════════════════════════
+   TABLE BUILD
+═══════════════════════════════════════════════ */
+function buildTable() {
+  buildTableHead();
+  buildTableBody();
+}
+
+function buildTableHead() {
+  const thead = document.getElementById('schedThead');
+  let html = '<tr><th class="th-name">MÉDICO / DÍA →</th>';
+  for (let d = 1; d <= 31; d++) {
+    let cls = '';
+    if (isSun(d)) cls = 'th-sun';
+    else if (isSat(d)) cls = 'th-sat';
+    if (d === TODAY_D) cls += ' th-today';
+    html += `<th class="${cls.trim()}" title="${DAY_NAMES_FULL[dow(d)]} ${d}">
+      <div class="th-day-inner">
+        <span class="th-day-num">${d}</span>
+        <span class="th-day-name">${DAY_NAMES_SHORT[dow(d)]}</span>
+      </div>
+    </th>`;
+  }
+  html += '</tr>';
+  thead.innerHTML = html;
+}
+
+function buildTableBody() {
+  const tbody = document.getElementById('schedTbody');
+  let html = '';
+  DOCTORS.forEach((doc, idx) => {
+    const ini = initials(doc.name);
+    const avatarBg = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+    html += `<tr>
+      <td class="td-name">
+        <div class="td-name-inner">
+          <div class="td-avatar" style="background:${avatarBg}">${ini}</div>
+          <span class="td-doc-name">${doc.name}</span>
+        </div>
+      </td>`;
+    for (let d = 1; d <= 31; d++) {
+      const shift = doc.schedule[d] || '';
+      let cls = 'td-shift';
+      if (d === TODAY_D) cls += ' td-today';
+      else if (isSun(d)) cls += ' td-sun';
+      else if (isSat(d)) cls += ' td-sat';
+      if (hasNote(d)) cls += ' has-note';
+      html += `<td class="${cls}" onclick="openDayModal(${d})"
+        title="${doc.name}${shift?' · '+shiftName(shift):' · Libre'}">${tableBadge(shift)}</td>`;
+    }
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════
+   VIEW SWITCH
+═══════════════════════════════════════════════ */
+let currentView = 'calendar';
+
+function switchView(v) {
+  currentView = v;
+  document.getElementById('view-calendar').classList.toggle('active', v === 'calendar');
+  document.getElementById('view-table').classList.toggle('active', v === 'table');
+  document.getElementById('btnViewCal').classList.toggle('active', v === 'calendar');
+  document.getElementById('btnViewTbl').classList.toggle('active', v === 'table');
+  if (v === 'table') {
+    setTimeout(scrollTableToToday, 120);
+  }
+}
+
+function scrollTableToToday() {
+  const wrap  = document.getElementById('tableWrap');
+  const ths   = document.querySelectorAll('.sched-table thead th');
+  const todayTh = ths[TODAY_D]; // index 0=name, 1=day1...
+  if (todayTh && wrap) {
+    const colLeft = todayTh.offsetLeft;
+    const wrapW   = wrap.clientWidth;
+    wrap.scrollLeft = Math.max(0, colLeft - wrapW / 2 + todayTh.offsetWidth / 2);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   DAY MODAL
+═══════════════════════════════════════════════ */
+let activeDay = null;
+
+function openDayModal(day) {
+  activeDay = day;
+  const d    = dow(day);
+  const docs = doctorsOnDay(day);
+  const isToday = day === TODAY_D;
+
+  document.getElementById('dmDayNum').textContent   = day;
+  document.getElementById('dmDayLabel').textContent = `${DAY_NAMES_FULL[d]}, ${day} de Marzo 2026`;
+
+  const todayBadge = document.getElementById('dmTodayBadge');
+  todayBadge.style.display = isToday ? 'inline-flex' : 'none';
+
+  // Shift summary badges
+  const counts = dayShiftCounts(day);
+  const sumEl  = document.getElementById('dmShiftSummary');
+  if (Object.keys(counts).length === 0) {
+    sumEl.innerHTML = '<span style="font-size:12px;color:var(--ink-3);font-style:italic">Sin asignaciones registradas</span>';
+  } else {
+    sumEl.innerHTML = Object.entries(counts).map(([code, cnt]) => {
+      const m  = SHIFT_META[code]; if (!m) return '';
+      const tc = code === 'MA' ? 'var(--ink-2)' : 'white';
+      return `<div class="dm-shift-badge dsb-${code}" style="background:${m.hex};color:${tc}">
+        ${m.label} <strong style="font-size:14px">${cnt}</strong>
+      </div>`;
+    }).join('');
+  }
+
+  // Doctor list
+  const listEl = document.getElementById('dmDoctorList');
+  if (docs.length === 0) {
+    listEl.innerHTML = '<div class="dm-no-staff">Ningún médico asignado para este día.</div>';
+  } else {
+    listEl.innerHTML = docs.map(doc => {
+      const color = shiftHex(doc.shift);
+      return `<div class="dm-doc-item">
+        <div class="dm-doc-bar" style="background:${color}"></div>
+        <span class="dm-doc-name">${doc.name}</span>
+        <span class="dm-doc-shift-label">${shiftName(doc.shift)}</span>
+        ${tableBadge(doc.shift)}
+      </div>`;
+    }).join('');
+  }
+
+  // Notes
+  document.getElementById('dmNoteArea').value = getNote(day);
+
+  document.getElementById('dayOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('dmNoteArea').focus(), 350);
+}
+
+function closeDayModal() {
+  document.getElementById('dayOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  activeDay = null;
+}
+
+function saveNote() {
+  if (activeDay === null) return;
+  const val = document.getElementById('dmNoteArea').value.trim();
+  setNote(activeDay, val);
+  refreshNoteIndicators();
+  showToast('✔', val ? 'Nota guardada correctamente' : 'Nota eliminada');
+}
+
+function clearNote() {
+  if (activeDay === null) return;
+  document.getElementById('dmNoteArea').value = '';
+  setNote(activeDay, '');
+  refreshNoteIndicators();
+  showToast('🗑', 'Nota eliminada');
+}
+
+function refreshNoteIndicators() {
+  // Calendar cells
+  document.querySelectorAll('.cal-cell').forEach(el => {
+    const day = parseInt(el.getAttribute('onclick')?.match(/\d+/)?.[0]||'0');
+    if (!day) return;
+    el.classList.toggle('has-note', hasNote(day));
+  });
+  // Table cells
+  document.querySelectorAll('.td-shift').forEach(el => {
+    const day = parseInt(el.getAttribute('onclick')?.match(/\d+/)?.[0]||'0');
+    if (!day) return;
+    el.classList.toggle('has-note', hasNote(day));
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   BANNER
+═══════════════════════════════════════════════ */
+function openBanner() {
+  document.getElementById('bannerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeBanner() {
+  document.getElementById('bannerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  try { sessionStorage.setItem('banner_seen', '1'); } catch(e){}
+}
+
+function autoBanner() {
+  const now       = new Date();
+  const marchStart = new Date(2026, 2, 1);
+  const showFrom   = new Date(2026, 1, 24); // Feb 24
+  const inWindow   = now >= showFrom && now < marchStart;
+  if (inWindow) {
+    try { if (sessionStorage.getItem('banner_seen')) return; } catch(e){}
+    setTimeout(openBanner, 900);
+  }
+}
+
+// Close banner on outside click
+document.getElementById('bannerOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeBanner();
+});
+
+/* ═══════════════════════════════════════════════
+   PRINT & PDF
+═══════════════════════════════════════════════ */
+function printPage() {
+  // Switch to table for print, print, then restore
+  const prev = currentView;
+  if (currentView !== 'table') switchView('table');
+  setTimeout(() => {
+    window.print();
+    if (prev !== 'table') setTimeout(() => switchView(prev), 300);
+  }, 120);
+}
+
+function exportPDF() {
+  showToast('⏳', 'Generando PDF, por favor espere...');
+  const prev = currentView;
+  if (currentView !== 'table') switchView('table');
+
+  const wrap = document.getElementById('tableWrap');
+  const origMH = wrap.style.maxHeight;
+  const origOV = wrap.style.overflow;
+  wrap.style.maxHeight = 'none';
+  wrap.style.overflow  = 'visible';
+
+  const opt = {
+    margin:      [8,4],
+    filename:    'ROL_Medico_Marzo_2026_IPRESS_REQUE.pdf',
+    image:       { type:'jpeg', quality:.95 },
+    html2canvas: { scale:2, useCORS:true, scrollX:0, scrollY:0, logging:false },
+    jsPDF:       { unit:'mm', format:'a3', orientation:'landscape' }
+  };
+
+  html2pdf().set(opt).from(document.getElementById('schedTable')).save()
+    .then(() => {
+      wrap.style.maxHeight = origMH;
+      wrap.style.overflow  = origOV;
+      if (prev !== 'table') switchView(prev);
+      showToast('✔', 'PDF descargado exitosamente');
+    })
+    .catch(() => {
+      wrap.style.maxHeight = origMH;
+      wrap.style.overflow  = origOV;
+      if (prev !== 'table') switchView(prev);
+      showToast('⚠', 'Error al generar PDF. Usa Imprimir.');
+    });
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+let toastTimer = null;
+function showToast(icon, msg) {
+  const el  = document.getElementById('toast');
+  const ico = document.getElementById('toastIcon');
+  const txt = document.getElementById('toastMsg');
+  ico.textContent = icon;
+  txt.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+/* ═══════════════════════════════════════════════
+   SUBBAR DATE
+═══════════════════════════════════════════════ */
+function updateSubbar() {
+  const now = new Date();
+  const dayName = DAY_NAMES_FULL[now.getDay()];
+  const month   = MONTHS[now.getMonth()];
+  document.getElementById('subbarDate').textContent =
+    `Hoy: ${dayName}, ${now.getDate()} de ${month} de ${now.getFullYear()}`;
+
+  const docs = doctorsOnDay(TODAY_D);
+  document.getElementById('subbarDoctors').textContent =
+    `Día 19 en turno: ${docs.length} médico(s)`;
+}
+
+/* ═══════════════════════════════════════════════
+   KEYBOARD
+═══════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeDayModal();
+    closeBanner();
+  }
+});
+document.getElementById('dayOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeDayModal();
+});
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildCalendar();
+  buildTable();
+  updateSubbar();
+  autoBanner();
+  refreshNoteIndicators();
+});
+</script>
+</body>
+</html>
